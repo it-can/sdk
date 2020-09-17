@@ -368,7 +368,7 @@ class MyParcelCollection extends Collection
         $result        = $request->getResult('data.shipments');
         $newCollection = $this->getNewCollectionFromResult($result);
 
-        $this->items = $newCollection->items;
+        $this->items = $newCollection->sortByCollection($this)->items;
 
         return $this;
     }
@@ -454,11 +454,19 @@ class MyParcelCollection extends Collection
      */
     public function setPdfOfLabels($positions = self::DEFAULT_A4_POSITION)
     {
+        $urlLocation = 'pdfs';
+
         /** If $positions is not false, set paper size to A4 */
         $this
             ->createConcepts()
             ->setLabelFormat($positions);
-        $conceptIds = $this->getConsignmentIds($key);
+
+        $conceptIds  = $this->getConsignmentIds($key);
+        $requestType = MyParcelRequest::REQUEST_TYPE_RETRIEVE_LABEL;
+        if ($this->useLabelPrepare(count($conceptIds))) {
+            $requestType = MyParcelRequest::REQUEST_TYPE_RETRIEVE_PREPARED_LABEL;
+            $urlLocation = 'pdf';
+        }
 
         if ($key) {
             $request = (new MyParcelRequest())
@@ -466,12 +474,13 @@ class MyParcelCollection extends Collection
                 ->setRequestParameters(
                     $key,
                     implode(';', $conceptIds) . '/' . $this->getRequestBody(),
-                    MyParcelRequest::REQUEST_HEADER_RETRIEVE_LABEL_PDF
+                    MyParcelRequest::REQUEST_HEADER_RETRIEVE_LABEL_LINK
                 )
-                ->sendRequest('GET', MyParcelRequest::REQUEST_TYPE_RETRIEVE_LABEL);
+                ->sendRequest('GET', $requestType);
 
-            $this->label_pdf = $request->getResult();
+            $this->label_link = MyParcelRequest::REQUEST_URL . $request->getResult("data.$urlLocation.url");
         }
+
         $this->setLatestData();
 
         return $this;
@@ -749,6 +758,28 @@ class MyParcelCollection extends Collection
     public static function findByReferenceId(string $id, string $apiKey): MyParcelCollection
     {
         return self::findManyByReferenceId([$id], $apiKey);
+    }
+
+    /**
+     * @param \MyParcelNL\Sdk\src\Helper\MyParcelCollection|\MyParcelNL\Sdk\src\Model\Consignment\AbstractConsignment[] $sortedCollection
+     *
+     * @return $this
+     */
+    public function sortByCollection(MyParcelCollection $sortedCollection): MyParcelCollection
+    {
+        $result = new MyParcelCollection();
+
+        foreach ($sortedCollection as $sorted) {
+            $consignment = $this->where('consignment_id', $sorted->getConsignmentId())->first();
+
+            if ($consignment) {
+                $result[] = $consignment;
+            }
+        }
+
+        $leftItems = $this->whereNotIn('consignment_id', $result->getConsignmentIds());
+
+        return $result->merge($leftItems);
     }
 
     /**
