@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace MyParcelNL\Sdk\Tests\Services;
 
 use Exception;
-use MyParcelNL\Sdk\src\Model\Carrier\CarrierRedJePakketje;
+use MyParcelNL\Sdk\src\Model\Carrier\CarrierInstabox;
 use MyParcelNL\Sdk\src\Services\Web\DropOffPointWebService;
 use PHPUnit\Framework\TestCase;
 
@@ -19,7 +19,7 @@ class DropOffPointServiceTest extends TestCase
      */
     public function testGetDropOffPoint(): void
     {
-        $service = (new DropOffPointWebService(new CarrierRedJePakketje()))->setApiKey(getenv('API_KEY'));
+        $service = (new DropOffPointWebService(new CarrierInstabox()))->setApiKey(getenv('API_KEY'));
         $result  = $service->getDropOffPoint('e02158ab-7307-434b-956c-0aeb60ef1046');
 
         if ($result) {
@@ -37,7 +37,7 @@ class DropOffPointServiceTest extends TestCase
      */
     public function testGetDropOffPoints(): void
     {
-        $service = (new DropOffPointWebService(new CarrierRedJePakketje()))->setApiKey(getenv('API_KEY'));
+        $service = (new DropOffPointWebService(new CarrierInstabox()))->setApiKey(getenv('API_KEY'));
         $dropOffPoints  = $service->getDropOffPoints('6825ME');
 
         self::assertNotEmpty($dropOffPoints->all(), 'No dropoff points found');

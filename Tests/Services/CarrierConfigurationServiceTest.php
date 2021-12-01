@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace MyParcelNL\Sdk\src\Services;
 
-use MyParcelNL\Sdk\src\Model\Carrier\CarrierRedJePakketje;
+use MyParcelNL\Sdk\src\Model\Carrier\CarrierInstabox;
 use MyParcelNL\Sdk\src\Services\Web\AccountWebService;
 use MyParcelNL\Sdk\src\Services\Web\CarrierConfigurationWebService;
 use PHPUnit\Framework\TestCase;
@@ -23,7 +23,7 @@ class CarrierConfigurationServiceTest extends TestCase
 
         $carrierConfigurationService = (new CarrierConfigurationWebService())->setApiKey(getenv('API_KEY'));
 
-        $result = $carrierConfigurationService->getCarrierConfiguration($shop->getId(), CarrierRedJePakketje::ID);
+        $result = $carrierConfigurationService->getCarrierConfiguration($shop->getId(), CarrierInstabox::ID);
 
         self::assertNotEmpty($result->getDefaultDropOffPointIdentifier());
     }

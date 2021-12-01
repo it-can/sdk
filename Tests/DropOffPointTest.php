@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 use MyParcelNL\Sdk\src\Factory\ConsignmentFactory;
 use MyParcelNL\Sdk\src\Helper\MyParcelCollection;
-use MyParcelNL\Sdk\src\Model\Carrier\CarrierRedJePakketje;
+use MyParcelNL\Sdk\src\Model\Carrier\CarrierInstabox;
 use MyParcelNL\Sdk\src\Model\Consignment\DropOffPoint;
 use MyParcelNL\Sdk\src\Services\Web\DropOffPointWebService;
 use PHPUnit\Framework\TestCase;
@@ -14,7 +14,7 @@ class DropOffPointTest extends TestCase
     public function provideTestDropOffPointData(): array
     {
         return [
-            'RedJePakketje' => [
+            'Instabox' => [
                 [
                     'cc'          => 'NL',
                     'company'     => 'MyParcel',
@@ -37,7 +37,7 @@ class DropOffPointTest extends TestCase
      */
     public function testDropOffPoint(array $consignmentTest): void
     {
-        $consignment = ConsignmentFactory::createByCarrierId(CarrierRedJePakketje::getId())
+        $consignment = ConsignmentFactory::createByCarrierId(CarrierInstabox::getId())
             ->setApiKey(getenv('API_KEY'))
             ->setCountry($consignmentTest['cc'])
             ->setPerson($consignmentTest['person'])
