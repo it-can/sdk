@@ -8,20 +8,19 @@ use MyParcelNL\Sdk\src\Rule\Consignment\DeliveryDateRule;
 use MyParcelNL\Sdk\src\Rule\Consignment\DropOffPointRule;
 use MyParcelNL\Sdk\src\Rule\Consignment\LocalCountryOnlyRule;
 use MyParcelNL\Sdk\src\Rule\Consignment\ShipmentOptionsRule;
-use MyParcelNL\Sdk\src\Validator\AbstractValidator;
 
-class RedJePakketjeConsignmentValidator extends AbstractValidator
+class RedJePakketjeConsignmentValidator extends AbstractConsignmentValidator
 {
     /**
      * @inheritDoc
      */
     protected function getRules(): array
     {
-        return [
-            new DeliveryDateRule(),
-            new DropOffPointRule(),
-            new LocalCountryOnlyRule(),
-            new ShipmentOptionsRule(),
-        ];
+        return parent::getRules() + [
+                new DeliveryDateRule(),
+                new DropOffPointRule(),
+                new LocalCountryOnlyRule(),
+                new ShipmentOptionsRule(),
+            ];
     }
 }

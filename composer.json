@@ -30,7 +30,8 @@
     }
   ],
   "require": {
-    "php": ">=7.1.0"
+    "php": ">=7.1.0",
+    "illuminate/support": "v7.30.6"
   },
   "require-dev": {
     "fakerphp/faker": "^v1.16.0",

@@ -18,4 +18,7 @@
     <php>
         <env name="TEST" value="true" />
     </php>
+    <logging>
+        <log type="coverage-html" target="./coverage" />
+    </logging>
 </phpunit>
